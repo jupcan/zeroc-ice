@@ -3,7 +3,7 @@
 
 import sys
 import Ice
-Ice.loadSlice('Printer.ice')
+Ice.loadSlice('printer.ice')
 import Example
 
 
@@ -15,7 +15,7 @@ class Client(Ice.Application):
         if not printer:
             raise RuntimeError('Invalid proxy')
 
-        printer.write('Hello World!')
+        printer.write('eyooooo whatsapp!')
 
         return 0
 
