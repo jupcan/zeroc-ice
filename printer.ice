@@ -1,1 +1,5 @@
-”””O.(–( Ã+I-“ÀLN
+module Example {
+  interface Printer {
+    void write(string message);
+  };
+};
