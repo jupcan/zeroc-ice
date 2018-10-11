@@ -15,7 +15,7 @@ class Client(Ice.Application):
         if not printer:
             raise RuntimeError('Invalid proxy')
 
-        printer.write('eyooooo whatsapp!')
+        printer.write('hola mundo')
 
         return 0
 
