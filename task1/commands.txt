@@ -1,0 +1,4 @@
+mkdir -p /tmp/db/registry
+icegridregistry --Ice.Config=node1.config
+./server.py --Ice.Config=server.config
+./client.py --Ice.Config=client.config "printer1 -t @ PrinterAdapter1"
