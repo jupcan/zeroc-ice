@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- This file was written by IceGrid Admin -->
+<!-- This file was written by IceGrid GUI -->
 <icegrid>
    <application name="PrinterApp">
       <distrib icepatch="${application}.IcePatch2/server"/>
@@ -8,8 +8,9 @@
          <parameter name="topic-manager-endpoints" default="default"/>
          <parameter name="publish-endpoints" default="default"/>
          <parameter name="flush-timeout" default="1000"/>
-         <service name="${instance-name}" entry="IceStormService,34:createIceStorm">
+         <service name="${instance-name}" entry="IceStormService,37:createIceStorm">
             <properties>
+               <property name="${service}.LMDB.Path" value="${service.data}"/>
                <property name="${service}.InstanceName" value="${instance-name}"/>
                <property name="${service}.Flush.Timeout" value="${flush-timeout}"/>
             </properties>
@@ -17,7 +18,6 @@
             <adapter name="${service}.TopicManager" endpoints="${topic-manager-endpoints}" id="${instance-name}.TopicManager">
                <object identity="${instance-name}/TopicManager" type="::IceStorm::TopicManager"/>
             </adapter>
-            <dbenv name="${service}"/>
          </service>
       </service-template>
       <service-template id="IceStorm-HA">
@@ -29,8 +29,9 @@
          <parameter name="flush-timeout" default="1000"/>
          <parameter name="publish-replica-group"/>
          <parameter name="topic-manager-replica-group"/>
-         <service name="${instance-name}${node-id}" entry="IceStormService,34:createIceStorm">
+         <service name="${instance-name}${node-id}" entry="IceStormService,37:createIceStorm">
             <properties>
+               <property name="${service}.LMDB.Path" value="${service.data}"/>
                <property name="${service}.InstanceName" value="${instance-name}"/>
                <property name="${service}.NodeId" value="${node-id}"/>
                <property name="${service}.Flush.Timeout" value="${flush-timeout}"/>
@@ -38,7 +39,6 @@
             <adapter name="${service}.Node" endpoints="${node-endpoints}" id="${instance-name}${node-id}.Node"/>
             <adapter name="${service}.Publish" endpoints="${publish-endpoints}" id="${instance-name}${node-id}.Publish" replica-group="${publish-replica-group}"/>
             <adapter name="${service}.TopicManager" endpoints="${topic-manager-endpoints}" id="${instance-name}${node-id}.TopicManager" replica-group="${topic-manager-replica-group}"/>
-            <dbenv name="${service}"/>
          </service>
       </service-template>
       <server-template id="Glacier2">
@@ -46,7 +46,7 @@
          <parameter name="client-endpoints"/>
          <parameter name="server-endpoints" default=""/>
          <parameter name="session-timeout" default="0"/>
-         <server id="${instance-name}" activation="manual" exe="glacier2router">
+         <server id="${instance-name}" activation="always" exe="glacier2router">
             <properties>
                <property name="Glacier2.Client.Endpoints" value="${client-endpoints}"/>
                <property name="Glacier2.Server.Endpoints" value="${server-endpoints}"/>
@@ -92,28 +92,24 @@
          </icebox>
       </server-template>
       <node name="node1">
-         <server-instance template="IcePatch2" directory="/tmp/printer-server-py">
-            <properties>
-               <property name="Ice.ServerIdleTime" value="5"/>
-            </properties>
-         </server-instance>
-         <server id="PrinterServer1" activation="manual" exe="./Server.py" pwd="${application.distrib}">
+         <server-instance template="IcePatch2" directory="/tmp/Printer"/>
+         <server id="PrinterServer1" activation="on-demand" exe="./Server.py" pwd="${application.distrib}">
             <properties>
                <property name="Ice.StdOut" value="${application.distrib}/server-out.txt"/>
-               <property name="Ice.StdErr" value="${application.distrib}/server-err.txt"/>
+               <property name="Ice.ServerIdleTime" value="5"/>
             </properties>
             <adapter name="PrinterAdapter" endpoints="default" id="${server}.PrinterAdapter">
-               <object identity="printer1" type="::Example::Printer"/>
+               <object identity="printer1"/>
             </adapter>
          </server>
       </node>
       <node name="node2">
          <server id="PrinterServer2" activation="manual" exe="./Server-UUID.py" pwd="${application.distrib}">
             <properties>
-               <property name="Ice.StdOut" value="${application.distrib}/server-out.txt"/>
-               <property name="Ice.StdErr" value="${application.distrib}/server-err.txt"/>
             </properties>
-            <adapter name="PrinterAdapter" endpoints="default" id="${server}.PrinterAdapter"/>
+            <adapter name="PrinterAdapter" endpoints="default" id="${server}.PrinterAdapter">
+               <object identity="printer2" type="::Example::Printer"/>
+            </adapter>
          </server>
       </node>
    </application>

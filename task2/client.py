@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# -*- coding:utf-8; tab-width:4; mode:python -*-
+# -*- coding: utf-8 -*-
 
 import sys
 import Ice
@@ -9,7 +9,7 @@ import Example
 
 class Client(Ice.Application):
     def run(self, argv):
-        proxy = self.communicator().stringToProxy('printer1')
+        proxy = self.communicator().stringToProxy(argv[1])
         printer = Example.PrinterPrx.checkedCast(proxy)
 
         if not printer:
