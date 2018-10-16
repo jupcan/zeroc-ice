@@ -3,7 +3,7 @@
 
 import sys
 import Ice
-Ice.loadSlice('Printer.ice')
+Ice.loadSlice('printer.ice')
 import Example
 
 class PrinterI(Example.Printer):
@@ -13,7 +13,6 @@ class PrinterI(Example.Printer):
        print("{0}: {1}".format(self.n, message))
        sys.stdout.flush()
        self.n += 1
-    
 
 class Server(Ice.Application):
    def run(self, args):

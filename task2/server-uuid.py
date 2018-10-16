@@ -3,9 +3,8 @@
 
 import sys
 import Ice
-Ice.loadSlice('Printer.ice')
+Ice.loadSlice('printer.ice')
 import Example
-
 
 class PrinterI(Example.Printer):
     n = 0
@@ -14,7 +13,6 @@ class PrinterI(Example.Printer):
         print("{0}: {1}".format(self.n, message))
         sys.stdout.flush()
         self.n += 1
-
 
 class Server(Ice.Application):
     def run(self, argv):
@@ -31,7 +29,6 @@ class Server(Ice.Application):
         broker.waitForShutdown()
 
         return 0
-
 
 server = Server()
 sys.exit(server.main(sys.argv))
