@@ -34,7 +34,6 @@ class Server(Ice.Application):
 
       return 0
 
-
 if __name__ == '__main__':
     app = Server()
     exit_status = app.main(sys.argv)

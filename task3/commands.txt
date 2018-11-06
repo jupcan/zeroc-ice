@@ -1,0 +1,4 @@
+scp -r /tmp/printer/ user@192.168.0.164:/tmp/printer
+scp -r /home/jupcan/Documentos/github/zeroc-ice/task3/ user@192.168.0.164:/home/user/task3
+mkdir -p /tmp/db/node2
+icegridnode --Ice.Config=node2.config
