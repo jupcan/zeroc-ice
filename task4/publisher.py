@@ -1,12 +1,11 @@
 #!/usr/bin/python -u
 # -*- coding: utf-8 -*-
-
 import sys
 import Ice
 import IceStorm
-Ice.loadSlice('./Printer.ice')
+Ice.loadSlice('printer.ice')
 import Example
-
+import time
 
 class Publisher(Ice.Application):
     def get_topic_manager(self):
@@ -32,14 +31,12 @@ class Publisher(Ice.Application):
             print("Topic {} not found, creating...".format(topic_name))
             topic = topic_mgr.create(topic_name)
 
-        publisher = topic.getPublisher()
-        printer = Example.PrinterPrx.uncheckedCast(publisher)
+        publisher = topic.getPublisher() #topic publisher
+        printer = Example.PrinterPrx.uncheckedCast(publisher) #unchecked cause p does not have iface
 
         print "publishing 10 'Hello World' events"
         for i in range(10):
             printer.write("Hello World %s!" % i)
-
+            time.sleep(1)
         return 0
-
-
 sys.exit(Publisher().main(sys.argv))

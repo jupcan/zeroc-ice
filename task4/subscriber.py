@@ -1,18 +1,15 @@
 #!/usr/bin/python -u
 # -*- coding: utf-8 -*-
-
 import sys
 import Ice
 import IceStorm
-Ice.loadSlice('Printer.ice')
+Ice.loadSlice('printer.ice')
 import Example
-
 
 class PrinterI(Example.Printer):
     def write(self, message, current=None):
         print("Event received: {0}".format(message))
         sys.stdout.flush()
-
 
 class Subscriber(Ice.Application):
     def get_topic_manager(self):
@@ -26,7 +23,7 @@ class Subscriber(Ice.Application):
         return IceStorm.TopicManagerPrx.checkedCast(proxy)
 
     def run(self, argv):
-        topic_mgr = self.get_topic_manager()
+        topic_mgr = self.get_topic_manager() #proxy to topic
         if not topic_mgr:
             print ': invalid proxy'
             return 2
@@ -49,10 +46,6 @@ class Subscriber(Ice.Application):
         adapter.activate()
         self.shutdownOnInterrupt()
         ic.waitForShutdown()
-
         topic.unsubscribe(subscriber)
-
         return 0
-
-
 sys.exit(Subscriber().main(sys.argv))
