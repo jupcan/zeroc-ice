@@ -13,4 +13,5 @@ class Client(Ice.Application):
             raise RuntimeError('invalid proxy')
         printer.write('hello world')
         return 0
+        
 sys.exit(Client().main(sys.argv))

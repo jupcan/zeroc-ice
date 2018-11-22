@@ -6,6 +6,11 @@ import IceStorm
 Ice.loadSlice('printer.ice')
 import Example
 
+class PrinterI(Example.Printer):
+    def write(self, message, current=None):
+        print("event received: {0}".format(message))
+        sys.stdout.flush()
+
 class StatisticsI(Example.Statistics):
     def __init__(self):
         self.statistics = {}
@@ -15,7 +20,7 @@ class StatisticsI(Example.Statistics):
         if printerId in self.statistics:
             self.statistics[printerId] += 1
         else:
-            self.statistics[printerId] = 0
+            self.statistics[printerId] = 1
         print(self.statistics)
         sys.stdout.flush()
 
@@ -54,4 +59,5 @@ class Subscriber(Ice.Application):
         ic.waitForShutdown()
         topic.unsubscribe(subscriber)
         return 0
+        
 sys.exit(Subscriber().main(sys.argv))
