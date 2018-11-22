@@ -15,7 +15,11 @@ stop: icestorm.config
 	killall icebox
 
 run-publisher:  icestorm.config
-	./publisher.py --Ice.Config=publisher.config
+	./server.py --Ice.Config=server.config
 
 run-subscriber: icestorm.config
-	./subscriber.py --Ice.Config=subscriber.config
+	./statistics.py --Ice.Config=statistics.config
+
+shutdown_systemctl:
+	sudo systemctl stop icegridregistry
+	sudo systemctl stop icegridnode

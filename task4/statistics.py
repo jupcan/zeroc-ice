@@ -6,9 +6,17 @@ import IceStorm
 Ice.loadSlice('printer.ice')
 import Example
 
-class PrinterI(Example.Printer):
-    def write(self, message, current=None):
-        print("Event received: {0}".format(message))
+class StatisticsI(Example.Statistics):
+    def __init__(self):
+        self.statistics = {}
+
+    def notify(self, printerId, current=None):
+        print("notification from {0}".format(printerId))
+        if printerId in self.statistics:
+            self.statistics[printerId] += 1
+        else:
+            self.statistics[printerId] = 0
+        print(self.statistics)
         sys.stdout.flush()
 
 class Subscriber(Ice.Application):
@@ -16,23 +24,21 @@ class Subscriber(Ice.Application):
         key = 'IceStorm.TopicManager.Proxy'
         proxy = self.communicator().propertyToProxy(key)
         if proxy is None:
-            print "property", key, "not set"
+            print("property {0} not set".format(key))
             return None
-
-        print("Using IceStorm in: '%s'" % key)
+        print("using icestorm in: '%s'" % key)
         return IceStorm.TopicManagerPrx.checkedCast(proxy)
 
     def run(self, argv):
         topic_mgr = self.get_topic_manager() #proxy to topic
         if not topic_mgr:
-            print ': invalid proxy'
+            print(': invalid proxy')
             return 2
 
         ic = self.communicator()
-        servant = PrinterI()
-        adapter = ic.createObjectAdapter("PrinterAdapter")
+        servant = StatisticsI()
+        adapter = ic.createObjectAdapter("StatisticsAdapter")
         subscriber = adapter.addWithUUID(servant)
-
         topic_name = "PrinterTopic"
         qos = {}
         try:
@@ -41,7 +47,7 @@ class Subscriber(Ice.Application):
             topic = topic_mgr.create(topic_name)
 
         topic.subscribeAndGetPublisher(qos, subscriber)
-        print 'Waiting events...', subscriber
+        print('waiting events... {}'.format(subscriber))
 
         adapter.activate()
         self.shutdownOnInterrupt()
